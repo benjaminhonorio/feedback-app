@@ -6,6 +6,8 @@ import NewFeedback from './Pages/NewFeedback'
 import EditFeedback from './Pages/EditFeedback'
 import FeedbackDetail from './Pages/FeedbackDetail'
 import Roadmap from './Pages/Roadmap'
+import Signup from './Pages/Signup'
+import Login from './Pages/Login'
 
 export default function App () {
   return (
@@ -16,6 +18,8 @@ export default function App () {
       <Route path="/feedback/:id/edit" element={<EditFeedback />} />
       <Route path="/feedback/new" element={<NewFeedback />} />
       <Route path="/roadmap" element={<Roadmap />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
     </>

@@ -4,25 +4,30 @@ import AppName from './AppName'
 import Roadmap from './Roadmap'
 import Tags from './Tags'
 
+const openMenuOnMobile = {
+  display: 'flex',
+  flexDirection: 'column'
+}
 export default function MenuSection () {
-  const { showMenu, openMenu } = useContext(DomManipulationContext)
-
-  const openMenuOnMobile = {
-    display: 'flex',
-    flexDirection: 'column'
-  }
+  const { showMenu, openMenu, setShowMenu } = useContext(DomManipulationContext)
 
   useEffect(() => {
     window.addEventListener('resize', openMenu)
     return () => window.removeEventListener('resize', openMenu)
   })
 
+  useEffect(() => {
+    return () => setShowMenu(false)
+  }, [])
+
   return (
-    <aside className="menu-section" style={showMenu ? openMenuOnMobile : {}}>
-      <AppName />
-      <Tags />
-      {showMenu && <hr style={{ border: '2px solid #eee' }} />}
-      <Roadmap />
-    </aside>
+    <>
+      <aside className="menu-section" style={showMenu ? openMenuOnMobile : {}}>
+        <AppName />
+        <Tags />
+        {showMenu && <hr style={{ border: '2px solid #eee' }} />}
+        <Roadmap />
+      </aside>
+    </>
   )
 }

@@ -7,6 +7,6 @@ export default function FeedbackSection () {
     <section className="feedback">
       <FeedbackSectionHeader/>
       <FeedbackSectionList/>
-  </section>
+    </section>
   )
 }

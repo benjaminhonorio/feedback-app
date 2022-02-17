@@ -24,20 +24,24 @@ $tag: #3d4aff;
   box-sizing: inherit;
   margin: 0;
   padding: 0;
-  font-family: 'Josefin Sans', sans-serif;
 }
 
 html {
   overflow-y: scroll;
 }
 
-body {
-  background-color: $background;
-  color: $font-over-light;
+a {
+  text-decoration: none;
+  color: $primary;
 }
 
-body * + * {
-  margin-top: 1em;
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  background-color: $background;
+  color: $font-over-light;
+  * + * {
+    margin-top: 1em;
+  }
 }
 
 main {
@@ -75,8 +79,20 @@ main {
         color: $font-light;
         margin-top: 0.25em;
       }
-      .menu {
+      .menu-icon {
         display: none;
+      }
+      .authentication {
+        font-weight: 300;
+        p {
+          color: $font-over-dark;
+        }
+        a {
+          color: $font-light;
+          &:hover {
+            color: $orange;
+          }
+        }
       }
     }
     .roadmap {
@@ -85,6 +101,7 @@ main {
         justify-content: space-between;
         align-items: center;
         a {
+          text-decoration: underline;
           margin-top: 0;
         }
       }
@@ -113,11 +130,11 @@ main {
       }
       a {
         color: $font-over-dark;
-        text-decoration: none;
       }
       .sortby {
         display: flex;
         align-items: center;
+        justify-content: center;
         position: relative;
         width: 200px;
         ul.dropdown-list {
@@ -127,7 +144,7 @@ main {
           flex-direction: column;
           border-radius: 0 0 0.25em 0.25em;
           top: 1rem;
-          left: 3rem;
+          right: 2rem;
           padding: 0.5em 0 0 0;
           > li {
             border-bottom: $background-header 2px solid;
@@ -158,8 +175,11 @@ main {
   }
 }
 
-.list-feedback-section {
-  .single-feedback {
+.single-feedback {
+  display: flex;
+  gap: 1em;
+  .feedback-content {
+    flex-grow: 1;
     h3,
     .comments-counter {
       cursor: pointer;
@@ -168,14 +188,6 @@ main {
     .comments-icon:hover {
       color: $tag;
     }
-  }
-}
-
-.single-feedback {
-  display: flex;
-  gap: 1em;
-  .feedback-content {
-    flex-grow: 1;
     p {
       color: $font-light;
     }
@@ -265,7 +277,6 @@ main {
 .tag {
   border: none;
   background-color: $background-secondary;
-  text-decoration: none;
   color: $tag;
   padding: 0.25em 1em;
   border-radius: 0.65em;
@@ -302,17 +313,17 @@ ul {
   height: 100vh;
   max-width: 768px;
   border-radius: 0.5em;
-  a {
-    text-decoration: none;
+  h1 {
+    padding: 0 0.5em;
   }
   .container {
     margin-top: 2.5em;
   }
-  .comments-view {
-    margin-top: 2em;
-    .container {
-      margin-top: 1em;
-    }
+}
+.comments-view {
+  margin-top: 2em;
+  .container {
+    margin-top: 1em;
   }
 }
 
@@ -327,6 +338,8 @@ ul {
 }
 
 input[type='text'],
+input[type='email'],
+input[type='password'],
 textarea,
 select {
   width: 100%;
@@ -349,6 +362,8 @@ select {
 }
 
 input[type='text'],
+input[type='email'],
+input[type='password'],
 select {
   height: 2.5rem;
   line-height: 2.5rem;
@@ -404,6 +419,78 @@ textarea {
   }
 }
 
+.roadmap-page-header {
+  background-color: $background-header;
+  color: $font-over-dark;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  div a {
+    color: $font-light;
+  }
+  .add-feedback {
+    margin-top: 0;
+  }
+}
+
+.roadmap-statuses {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1em;
+  font-weight: bold;
+  & > * {
+    margin-top: 0;
+    text-align: left;
+    cursor: pointer;
+  }
+}
+
+.status-subtitle {
+  display: block;
+  padding: 0.5em 0;
+  font-weight: initial;
+}
+
+.roadmap-feedback {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1em;
+  & > * {
+    margin-top: 0;
+  }
+  .single-feedback {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    > :first-child {
+      order: 1;
+    }
+    > :last-child {
+      order: 2;
+      justify-content: flex-end;
+    }
+    .upvotes {
+      flex-direction: row;
+      padding: 0.5em 0.85em;
+      & > * {
+        padding: 0;
+      }
+    }
+  }
+}
+
+.status {
+  color: $font-light;
+  display: flex;
+  & > * {
+    margin-top: 0;
+  }
+}
+
+.auth-label {
+  margin-top: 1em;
+}
+
 @media (max-width: 768px) {
   main {
     flex-direction: column;
@@ -433,14 +520,15 @@ textarea {
       .app-name {
         width: 100%;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         h1 {
           margin-top: 0;
         }
-        .menu {
+        .menu-icon {
           display: block;
           margin-top: 0;
           cursor: pointer;
+          padding-top: 0.5em;
         }
       }
       .tags,
@@ -456,9 +544,43 @@ textarea {
         }
         .add-feedback {
           font-size: 0.85rem;
-          padding: 0.65em 0.5em;
+        }
+        .sortby {
+          justify-content: flex-start;
+          ul.dropdown-list {
+            left: 3rem;
+            right: 3.5rem;
+          }
         }
       }
+    }
+
+    .list-feedback-section {
+      padding: 0 1em;
+    }
+
+    .roadmap-page-header {
+      border-radius: 0;
+    }
+    .roadmap-statuses {
+      color: $font-light;
+      & > * {
+        border-bottom: 3px solid $font-light;
+        text-align: center;
+        padding: 1em 0;
+      }
+    }
+    .status-subtitle {
+      display: none;
+      color: $font-light;
+    }
+  }
+  .new-comment-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    .add-feedback {
+      margin-top: inherit;
+      width: 100%;
     }
   }
   .single-feedback {
@@ -488,12 +610,14 @@ textarea {
       }
     }
   }
-  .list-feedback-section {
-    padding: 0 1em;
-  }
   .form-container {
     padding: 1em 0.25em;
     .form-buttons {
+      display: flex;
+      flex-direction: column;
+      & > * {
+        width: 100%;
+      }
       a {
         width: 100%;
         margin: 0.5em 0;
@@ -503,12 +627,9 @@ textarea {
       }
     }
   }
-  .new-comment-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    .add-feedback {
-      margin-top: inherit;
-      width: 100%;
+  .page-wrapper {
+    .auth-label {
+      padding: 0;
     }
   }
 }

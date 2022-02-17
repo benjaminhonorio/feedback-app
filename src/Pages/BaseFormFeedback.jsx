@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function BaseFormFeedback (props) {
   const [values, setValues] = useState({ title: '', tag: '', status: '', description: '' })
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (props.type === 'edit') {
@@ -18,7 +19,7 @@ export default function BaseFormFeedback (props) {
   return (
     <>
       <div className="page-wrapper">
-        <Link to="/">{'<'} Go back</Link>
+      <a href="#" onClick={() => navigate(-1)}>{'<'} Go back</a>
         <div className="container">
         <span className="material-icons plus-icon">
             {props.topFormIcon}
