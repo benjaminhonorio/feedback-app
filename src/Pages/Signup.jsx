@@ -1,12 +1,11 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Container from '../Components/Container'
 
 export default function Signup () {
-  const navigate = useNavigate()
   return (
     <div className="page-wrapper">
-      <a href="#" onClick={() => navigate(-1)}>{'<'} Go back</a>
+      <Link to="/">{'<'} Go back</Link>
       <Container>
         <h1 className="auth-label">Signup</h1>
         <div className="form-container">

@@ -1,26 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import Container from './Container'
 import { DomManipulationContext } from '../context/DomManipulationContext'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import useAuth from '../hooks/useAuth'
 
 export default function AppName () {
   const { showMenu, setShowMenu } = useContext(DomManipulationContext)
-  const [userLoggedIn, setUserLoggedIn] = useState(true)
-  const navigate = useNavigate()
+  const { loggedInUser, cleanLoggedInUser } = useAuth()
 
-  const handleLogOut = (e) => {
-    e.preventDefault()
-    setUserLoggedIn(false)
-  }
-
-  const handleLogIn = (e) => {
-    e.preventDefault()
-    navigate('/login')
-  }
-
-  const handleSignUp = (e) => {
-    e.preventDefault()
-    navigate('/signup')
+  const handleLogOut = () => {
+    cleanLoggedInUser()
   }
 
   return (
@@ -29,18 +18,16 @@ export default function AppName () {
         <h1>Make It Real</h1>
         <p>Feedback Board</p>
         <div className="authentication">
-          {userLoggedIn
+          {loggedInUser
             ? (
             <p>
-              Hello User,{' '}
-              <a href="" onClick={(e) => handleLogOut(e)}>
-                Logout
-              </a>
+              Hi {loggedInUser.name}.
+              <Link to="/" onClick={handleLogOut}> Logout </Link>
             </p>
               )
             : (
             <p>
-              <a href="" onClick={(e) => handleLogIn(e)}>Login</a> or <a href="" onClick={(e) => handleSignUp(e)}>Signup</a>
+              <Link to="/login">Login</Link> or <Link to="/signup">Signup</Link>
             </p>
               )}
         </div>

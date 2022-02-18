@@ -22,6 +22,12 @@ a {
   color: #9c08b9;
 }
 
+button {
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 body {
   font-family: 'Josefin Sans', sans-serif;
   background-color: #eee;
@@ -810,7 +816,8 @@ textarea {
   .form-container .form-buttons > * {
     width: 100%;
   }
-  .form-container .form-buttons a {
+  .form-container .form-buttons a,
+  .form-container .form-buttons button {
     width: 100%;
     margin: 0.5em 0;
   }

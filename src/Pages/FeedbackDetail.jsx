@@ -1,12 +1,15 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import Container from '../Components/Container'
 import { config } from '../config'
+import useAuth from '../hooks/useAuth'
 
 export default function FeedbackDetail () {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [feedbackPost, setFeedbackPost] = useState(null)
+  const { loggedInUser } = useAuth()
   const { id } = useParams()
   useEffect(() => {
     const getFeedback = async () => {
@@ -67,14 +70,17 @@ export default function FeedbackDetail () {
             <h3>{feedbackPost.comments?.length || 0} Comments</h3>
             <div>No comments yet. Be the first one!</div>
           </div>
-          <div className="new-comment container">
+          {loggedInUser
+            ? (<div className="new-comment container">
             <h3>Add Comment</h3>
             <textarea rows="5" placeholder="Type your comment here"></textarea>
             <div className="new-comment-footer">
               <span>250 Characters left</span>
               <a href="#" className="add-feedback">Post Comment</a>
             </div>
-          </div>
+          </div>)
+            : <Container><p>Please <Link style={{ textDecoration: 'underline', fontWeight: 'bold' }} to="/login">login</Link> to be part of the conversation</p></Container> }
+
         </div>
           )
         : error
