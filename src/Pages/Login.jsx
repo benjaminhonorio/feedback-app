@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Container from '../Components/Container'
 import useAuth from '../hooks/useAuth'
-import login from '../services/login'
+import { login } from '../services/login'
 import { setSession, setToken } from '../services/session'
 export default function Login () {
   const [formValues, setformValues] = useState({ username: '', password: '' })

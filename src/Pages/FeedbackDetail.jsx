@@ -1,42 +1,64 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Container from '../Components/Container'
-import { config } from '../config'
+import { FeedbackContext } from '../context/FeedbackContext'
 import useAuth from '../hooks/useAuth'
+import { deleteFeedback, getFeedback } from '../services/feedback'
+import { getToken } from '../services/session'
+import { capitalize } from '../utils'
 
 export default function FeedbackDetail () {
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState(false)
   const [feedbackPost, setFeedbackPost] = useState(null)
   const { loggedInUser } = useAuth()
+  const { mutate } = useContext(FeedbackContext)
   const { id } = useParams()
+  const navigate = useNavigate()
+  const token = getToken()
   useEffect(() => {
-    const getFeedback = async () => {
+    const setFeedback = async () => {
       try {
-        const response = await axios.get(
-          `${config.API_URL}/api/v1/feedback/${id}`
-        )
-        setFeedbackPost(response.data.data)
+        const { data, user } = await getFeedback(id, token)
+        setFeedbackPost(data)
+        setIsAdmin(user.admin)
         setLoading(false)
       } catch (error) {
         setError(true)
         setLoading(false)
       }
     }
-    getFeedback()
+    setFeedback()
   }, [])
 
-  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1)
   const handleUpvotes = () => () => {}
 
+  const handleDelete = async (e) => {
+    e.preventDefault()
+    try {
+      await deleteFeedback(id, token)
+      await mutate(false)
+      navigate('/')
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return (
     <div className="page-wrapper">
       <div className="page-links">
         <Link to="/">{'<'} Go back</Link>
-        <Link className="edit-feedback" to={`/feedback/${id}/edit`}>
-          Edit Feedback
-        </Link>
+        {loggedInUser &&
+          ((loggedInUser?.username === feedbackPost?.user.username) || isAdmin) && (
+            <div>
+              <a className="delete-feedback"href="" onClick={handleDelete}>
+                <span className="material-icons">delete</span>
+              </a>
+              <Link className="edit-feedback" to={`/feedback/${id}/edit`}>
+                Edit Feedback
+              </Link>
+            </div>
+        )}
       </div>
       {!loading && feedbackPost
         ? (
@@ -71,16 +93,35 @@ export default function FeedbackDetail () {
             <div>No comments yet. Be the first one!</div>
           </div>
           {loggedInUser
-            ? (<div className="new-comment container">
-            <h3>Add Comment</h3>
-            <textarea rows="5" placeholder="Type your comment here"></textarea>
-            <div className="new-comment-footer">
-              <span>250 Characters left</span>
-              <a href="#" className="add-feedback">Post Comment</a>
+            ? (
+            <div className="new-comment container">
+              <h3>Add Comment</h3>
+              <textarea
+                rows="5"
+                placeholder="Type your comment here"
+              ></textarea>
+              <div className="new-comment-footer">
+                <span>250 Characters left</span>
+                <a href="#" className="add-feedback">
+                  Post Comment
+                </a>
+              </div>
             </div>
-          </div>)
-            : <Container><p>Please <Link style={{ textDecoration: 'underline', fontWeight: 'bold' }} to="/login">login</Link> to be part of the conversation</p></Container> }
-
+              )
+            : (
+            <Container>
+              <p>
+                Please{' '}
+                <Link
+                  style={{ textDecoration: 'underline', fontWeight: 'bold' }}
+                  to="/login"
+                >
+                  login
+                </Link>{' '}
+                to be part of the conversation
+              </p>
+            </Container>
+              )}
         </div>
           )
         : error

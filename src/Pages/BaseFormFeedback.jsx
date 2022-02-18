@@ -1,19 +1,57 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { getToken } from '../services/session'
+import { createFeedback, updateFeedback } from '../services/feedback'
+import { FeedbackContext } from '../context/FeedbackContext'
+
+const initialState = { title: '', tag: '', status: '', description: '' }
 
 export default function BaseFormFeedback (props) {
-  const [values, setValues] = useState({ title: '', tag: '', status: '', description: '' })
+  const [formValues, setFormValues] = useState(() => initialState)
+  const { mutate } = useContext(FeedbackContext)
   const navigate = useNavigate()
-
+  const token = getToken()
+  const user = props.user
   useEffect(() => {
     if (props.type === 'edit') {
       const { title, tag, status, description } = props.feedback
-      setValues({ title, tag, status, description })
+      if (user.admin) {
+        setFormValues({ title, tag, status, description })
+      } else {
+        setFormValues({ title, tag, description })
+      }
     }
-  }, [])
-
+  }, [props.feedback])
   const handleInputChange = ({ target }) => {
-    setValues((state) => ({ ...state, [target.name]: target.value }))
+    setFormValues((state) => ({ ...state, [target.name]: target.value }))
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (props.type === 'edit') {
+      try {
+        const { data } = await updateFeedback(formValues, props.feedback.id, token)
+        mutate(true)
+        navigate(`/feedback/${data.id}`)
+      } catch (error) {
+        console.log(error)
+      }
+    } else if (props.type === 'create') {
+      try {
+        const { data } = await createFeedback(formValues, token)
+        // mutate(async (submissions) => {
+        //   console.log(submissions)
+        //   return { data: [...submissions.data, data] }
+        // }, true)
+        mutate(true)
+        setFormValues(initialState)
+        navigate(`/feedback/${data.id}`)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    // mutate(`${config.API_URL}/api/v1/feedback}`, async (response) => {
+    //   response
+    // })
   }
 
   return (
@@ -26,18 +64,18 @@ export default function BaseFormFeedback (props) {
         </span>
           <div className="form-container">
           <h2>{props.formTitle}</h2>
-          <form noValidate autoComplete='off'>
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
             <div>
               <label htmlFor="title">Feedback Title</label>
               <p>Add a short, descriptive title</p>
               <input type="text" name="title" id="title" placeholder="" onChange={handleInputChange}
-                  value={values.title}/>
+                  value={formValues.title}/>
             </div>
             <div>
               <label htmlFor="tag">Category</label>
               <p>Choose a category for your feedback</p>
               <select name="tag" id="tag" placeholder="" onChange={handleInputChange}
-                  value={values.tag}>
+                  value={formValues.tag}>
                 <option value=""></option>
                 <option value="feature">Feature</option>
                 <option value="enhancement">Enhancement</option>
@@ -46,12 +84,12 @@ export default function BaseFormFeedback (props) {
                 <option value="ux">UX</option>
               </select>
             </div>
-            {props.user?.admin
+            {user?.admin
               ? <div>
               <label htmlFor="status">Update Status</label>
               <p>Change feature status</p>
               <select name="status" id="status" placeholder="" onChange={handleInputChange}
-                  value={values.status}>
+                  value={formValues.status}>
                 <option value=""></option>
                 <option value="planned">Planned</option>
                 <option value="in-progress">In-Progress</option>
@@ -63,11 +101,11 @@ export default function BaseFormFeedback (props) {
               <label>Feedback Detail</label>
               <p>Include any specific comments on what should be improved, added, etc.</p>
               <textarea name="description" rows="8" onChange={handleInputChange}
-                  value={values.description}></textarea>
+                  value={formValues.description}></textarea>
             </div>
             <div className="form-buttons">
                 <Link to={props.type === 'create' ? '/' : `/feedback/${props.feedback.id}`} className="cancel-btn add-feedback" >Cancel</Link>
-                <a href="" className="add-feedback">{props.formSaveButtonLabel}</a>
+                <button className="add-feedback">{props.formSaveButtonLabel}</button>
             </div>
           </form>
           </div>

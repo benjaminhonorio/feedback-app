@@ -8,7 +8,7 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export function FeedbackContextProvider ({ children }) {
   const [sortOptions, setSortOptions] = useState()
-  const { data: feedback, error } = useSWR(
+  const { data: feedback, error, mutate } = useSWR(
     `${config.API_URL}/api/v1/feedback${sortOptions ? `?${sortOptions}` : ''}`,
     fetcher
   )
@@ -28,6 +28,7 @@ export function FeedbackContextProvider ({ children }) {
     value= {{
       feedback,
       error,
+      mutate,
       selectedTag,
       setSelectedTag,
       filteredFeedback,

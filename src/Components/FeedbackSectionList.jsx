@@ -4,7 +4,7 @@ import { config } from '../config'
 import axios from 'axios'
 import { useSWRConfig } from 'swr'
 import { useNavigate } from 'react-router-dom'
-
+import { capitalize } from '../utils'
 export default function FeedbackSectionList () {
   const { feedback, error, selectedTag, filteredFeedback, sortOptions } = useContext(FeedbackContext)
   const { mutate } = useSWRConfig()
@@ -181,8 +181,6 @@ export default function FeedbackSectionList () {
       </>
     )
   }
-
-  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 
   let feedbackSubmissions = []
   if (selectedTag === 'all') {

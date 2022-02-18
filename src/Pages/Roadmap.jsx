@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Container from '../Components/Container'
 import Main from '../Components/Main'
 import { FeedbackContext } from '../context/FeedbackContext'
-// import MenuSection from '../Components/MenuSection'
+import { capitalize } from '../utils'
 
 export default function Roadmap () {
   const [selected, setSelected] = useState('planned')
@@ -29,7 +29,6 @@ export default function Roadmap () {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   })
-  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1)
   const handleSelection = (status) => {
     if (isMobile) {
       setSelected(status)

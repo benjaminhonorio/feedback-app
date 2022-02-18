@@ -15,7 +15,7 @@ export function setToken (token) {
 }
 
 export function getToken () {
-  return sessionStorage.getItem('token')
+  return JSON.parse(sessionStorage.getItem('token')) || ''
 }
 
 export default { getSession, setSession, clearSession, setToken, getToken }

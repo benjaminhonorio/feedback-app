@@ -202,6 +202,7 @@ main .feedback .header-feedback-section .sortby ul.dropdown-list {
   top: 1rem;
   right: 2rem;
   padding: 0.5em 0 0 0;
+  width: 92.5px;
 }
 
 main .feedback .header-feedback-section .sortby ul.dropdown-list > li {
@@ -294,7 +295,32 @@ main .feedback .header-feedback-section .sortby span:first-child {
   background-color: #3d4aff;
   color: #fff;
   text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   margin-top: 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.delete-feedback {
+  background-color: #d81414;
+  padding: 0.5em;
+  color: white;
+  border-radius: 0.5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .page-links {
@@ -307,6 +333,14 @@ main .feedback .header-feedback-section .sortby span:first-child {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.page-links div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 0;
+  gap: 0.5em;
 }
 
 .circle {
@@ -726,7 +760,6 @@ textarea {
   }
   main .feedback .header-feedback-section .sortby ul.dropdown-list {
     left: 3rem;
-    right: 3.5rem;
   }
   main .list-feedback-section {
     padding: 0 1em;
@@ -828,6 +861,9 @@ textarea {
   }
   .page-wrapper .auth-label {
     padding: 0;
+  }
+  .page-links {
+    font-size: 0.85rem;
   }
 }
 /*# sourceMappingURL=style.css.map */
