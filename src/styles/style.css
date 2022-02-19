@@ -279,6 +279,20 @@ main .feedback .header-feedback-section .sortby span:first-child {
           align-items: center;
 }
 
+.no-feedback {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.no-feedback img {
+  width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  max-height: 400px;
+}
+
 .add-feedback {
   padding: 0.75em 1.25em;
   border: none;
@@ -684,6 +698,67 @@ textarea {
   margin-top: 1em;
 }
 
+.comment-wrapper {
+  font-size: 0.85rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  line-height: 1.2;
+}
+
+.comment-wrapper .comment-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.comment-wrapper .comment-header .comment-user {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.comment-wrapper .comment-header .comment-user .comment-username p {
+  margin-top: 0;
+  color: #aaacaf;
+}
+
+.comment-wrapper .comment-header .comment-user .user-image {
+  width: 40px;
+  margin: 0.5em 1em 0.5em 0;
+}
+
+.comment-wrapper .comment-header .comment-user .user-image img {
+  border-radius: 50%;
+  width: 100%;
+}
+
+.comment-wrapper .comment-text {
+  margin-top: 0;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 2;
+  grid-column: 1 / 3;
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 1;
+  grid-row: 2 / 3;
+  word-wrap: break-word;
+  text-align: justify;
+  padding-left: calc(40px + 1em);
+}
+
+hr {
+  background-color: #e8e9eb;
+  height: 1px;
+  border: 0;
+}
+
 @media (max-width: 768px) {
   main {
     -webkit-box-orient: vertical;
@@ -862,8 +937,8 @@ textarea {
   .page-wrapper .auth-label {
     padding: 0;
   }
-  .page-links {
-    font-size: 0.85rem;
+  .comment-wrapper .comment-text {
+    padding-left: 0;
   }
 }
 /*# sourceMappingURL=style.css.map */
