@@ -10,8 +10,36 @@ export default function Roadmap () {
   const statuses = ['Planned', 'In-Progress', 'Live']
 
   if (error) return <div>There was an error</div>
-  if (!feedback) return <div>Loading...</div>
-
+  if (!feedback) {
+    return (
+    <Container
+      className="roadmap"
+      style={showMenu ? { display: 'block' } : {}}
+    >
+      <div className="roadmap-header">
+        <h3>Roadmap</h3>
+        <Link to="/roadmap">View</Link>
+      </div>
+      <ul>
+        {['Planned', 'In-Progress', 'Live'].map((status) => {
+          return (
+            <li key={status}>
+              <div>
+                <span
+                  className={`circle ${status.toLowerCase()} material-icons`}
+                >
+                  circle
+                </span>
+                <span>{status}</span>
+              </div>
+              <span>...</span>
+            </li>
+          )
+        })}
+      </ul>
+    </Container>
+    )
+  }
   return (
     <Container
       className="roadmap"
