@@ -3,6 +3,7 @@ import Container from './Container'
 import { DomManipulationContext } from '../context/DomManipulationContext'
 import { Link } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
+import { capitalize } from '../utils'
 
 export default function AppName () {
   const { showMenu, setShowMenu } = useContext(DomManipulationContext)
@@ -21,7 +22,7 @@ export default function AppName () {
           {loggedInUser
             ? (
             <p>
-              Hi {loggedInUser.name}.
+              Hi {capitalize(loggedInUser.name)}.
               <Link to="/" onClick={handleLogOut}> Logout </Link>
             </p>
               )
