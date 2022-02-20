@@ -10,12 +10,12 @@ export function clearSession () {
   sessionStorage.removeItem('token')
 }
 
-export function setToken (token) {
+export function setTokenInSession (token) {
   return sessionStorage.setItem('token', JSON.stringify(token))
 }
 
-export function getToken () {
+export function getTokenFromSesion () {
   return JSON.parse(sessionStorage.getItem('token')) || ''
 }
 
-export default { getSession, setSession, clearSession, setToken, getToken }
+export default { getSession, setSession, clearSession, getTokenFromSesion, setTokenInSession }

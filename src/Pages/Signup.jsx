@@ -15,7 +15,6 @@ export default function Signup () {
       [target.name]: target.value
     }))
   }
-  console.log(formValues)
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (formValues.password === formValues.passwordRetyped) {

@@ -255,7 +255,7 @@ main .feedback .header-feedback-section .sortby span:first-child {
 
 .single-feedback .feedback-content h3:hover,
 .single-feedback .feedback-content .comments-icon:hover {
-  color: #3d4aff;
+  color: #9c08b9;
 }
 
 .single-feedback .feedback-content p {
@@ -291,6 +291,7 @@ main .feedback .header-feedback-section .sortby span:first-child {
   -o-object-fit: contain;
      object-fit: contain;
   max-height: 400px;
+  border-radius: 0.5em;
 }
 
 .add-feedback {
@@ -470,6 +471,11 @@ ul {
   margin-top: 1em;
 }
 
+.comments-view .single-feedback h3:hover {
+  color: inherit;
+  cursor: default;
+}
+
 .new-comment-footer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -536,6 +542,11 @@ textarea {
 .cancel-btn {
   background-color: #2b2d42;
   color: #fff;
+}
+
+.delete-comment-btn {
+  color: #d81414;
+  cursor: pointer;
 }
 
 .plus-icon {
@@ -749,7 +760,6 @@ textarea {
   -ms-grid-row-span: 1;
   grid-row: 2 / 3;
   word-wrap: break-word;
-  text-align: justify;
   padding-left: calc(40px + 1em);
 }
 
@@ -939,6 +949,9 @@ hr {
   }
   .comment-wrapper .comment-text {
     padding-left: 0;
+  }
+  .roadmap-feedback > * {
+    width: 100%;
   }
 }
 /*# sourceMappingURL=style.css.map */

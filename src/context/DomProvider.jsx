@@ -1,6 +1,10 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 
-export const DomManipulationContext = createContext()
+const DomManipulationContext = createContext()
+
+export function useDOM () {
+  return useContext(DomManipulationContext)
+}
 
 export function DomManipulationContextProvider ({ children }) {
   const [showMenuOnMobile, setShowMenuOnMobile] = useState(false)

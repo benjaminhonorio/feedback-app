@@ -1,7 +1,7 @@
-import React, { useEffect, useContext } from 'react'
-import { DomManipulationContext } from '../context/DomManipulationContext'
+import React, { useEffect } from 'react'
+import { useDOM } from '../context/DomProvider'
 import AppName from './AppName'
-import Roadmap from './Roadmap'
+import RoadmapSection from './RoadmapSection'
 import Tags from './Tags'
 
 const openMenuOnMobile = {
@@ -9,7 +9,7 @@ const openMenuOnMobile = {
   flexDirection: 'column'
 }
 export default function MenuSection () {
-  const { showMenu, openMenu, setShowMenu } = useContext(DomManipulationContext)
+  const { showMenu, openMenu, setShowMenu } = useDOM()
 
   useEffect(() => {
     window.addEventListener('resize', openMenu)
@@ -26,7 +26,7 @@ export default function MenuSection () {
         <AppName />
         <Tags />
         {showMenu && <hr style={{ border: '2px solid #eee' }} />}
-        <Roadmap />
+        <RoadmapSection />
       </aside>
     </>
   )

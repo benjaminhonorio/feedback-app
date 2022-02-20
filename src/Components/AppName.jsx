@@ -1,16 +1,21 @@
-import React, { useContext } from 'react'
-import Container from './Container'
-import { DomManipulationContext } from '../context/DomManipulationContext'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
+import Container from './Container'
+import { useAuth } from '../context/AuthProvider'
+import { useDOM } from '../context/DomProvider'
 import { capitalize } from '../utils'
 
 export default function AppName () {
-  const { showMenu, setShowMenu } = useContext(DomManipulationContext)
-  const { loggedInUser, cleanLoggedInUser } = useAuth()
+  const { showMenu, setShowMenu } = useDOM()
+  const { loggedInUser, cleanLoggedInUser, setToken } = useAuth()
 
   const handleLogOut = () => {
     cleanLoggedInUser()
+    setToken('')
+  }
+
+  const handleDisplayMenu = () => {
+    setShowMenu(!showMenu)
   }
 
   return (
@@ -20,36 +25,15 @@ export default function AppName () {
         <p>Feedback Board</p>
         <div className="authentication">
           {loggedInUser
-            ? (
-            <p>
-              Hi {capitalize(loggedInUser.name)}.
-              <Link to="/" onClick={handleLogOut}> Logout </Link>
-            </p>
-              )
-            : (
-            <p>
-              <Link to="/login">Login</Link> or <Link to="/signup">Signup</Link>
-            </p>
-              )}
+            ? <p>Hi {capitalize(loggedInUser.name)}. <Link to="/" onClick={handleLogOut}> Logout</Link></p>
+            : <p><Link to="/login">Login</Link> or <Link to="/signup">Signup</Link></p>
+          }
         </div>
       </div>
       {showMenu === true
-        ? (
-        <span
-          onClick={() => setShowMenu(!showMenu)}
-          className="menu-icon material-icons"
-        >
-          menu_open
-        </span>
-          )
-        : (
-        <span
-          onClick={() => setShowMenu(!showMenu)}
-          className="menu-icon material-icons"
-        >
-          menu
-        </span>
-          )}
+        ? <span onClick={handleDisplayMenu} className="menu-icon material-icons" > menu_open </span>
+        : <span onClick={handleDisplayMenu} className="menu-icon material-icons" > menu </span>
+      }
     </Container>
   )
 }

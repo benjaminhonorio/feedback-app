@@ -1,27 +1,23 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import useSWR from 'swr'
 import { config } from '../config'
 
-export const FeedbackContext = createContext()
+const FeedbackContext = createContext()
+
+export function useFeedback () {
+  return useContext(FeedbackContext)
+}
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export function FeedbackContextProvider ({ children }) {
-  const [sortOptions, setSortOptions] = useState()
+  const [sortOptions, setSortOptions] = useState('')
   const { data: feedback, error, mutate } = useSWR(
     `${config.API_URL}/api/v1/feedback${sortOptions ? `?${sortOptions}` : ''}`,
     fetcher
   )
   const [filteredFeedback, setFilteredFeedback] = useState([])
-  const [selectedTag, setSelectedTag] = useState('all')
-  const [sortBySelected, setSortBySelected] = useState('Most Recent')
-
-  useEffect(() => {
-    if (selectedTag !== 'all') {
-      const filtered = feedback.data.filter(feedback => feedback.tag === selectedTag)
-      setFilteredFeedback(filtered)
-    }
-  }, [selectedTag])
+  // console.log({ SWRurl: `${config.API_URL}/api/v1/feedback${sortOptions ? `?${sortOptions}` : ''}` })
 
   return (
     <FeedbackContext.Provider
@@ -29,14 +25,10 @@ export function FeedbackContextProvider ({ children }) {
       feedback,
       error,
       mutate,
-      selectedTag,
-      setSelectedTag,
       filteredFeedback,
       setFilteredFeedback,
       setSortOptions,
-      sortOptions,
-      sortBySelected,
-      setSortBySelected
+      sortOptions
     }}>
       {children}
     </FeedbackContext.Provider>

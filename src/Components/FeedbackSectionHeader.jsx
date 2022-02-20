@@ -1,11 +1,12 @@
-import React, { useContext } from 'react'
-import { FeedbackContext } from '../context/FeedbackContext'
+import React, { useState } from 'react'
+import { useFeedback } from '../context/FeedbackProvider'
 import { Link } from 'react-router-dom'
-import { DomManipulationContext } from '../context/DomManipulationContext'
+import { useDOM } from '../context/DomProvider'
 
 export default function FeedbackSectionHeader () {
-  const { feedback, setSortOptions, sortBySelected, setSortBySelected } = useContext(FeedbackContext)
-  const { showDropDownMenu, setShowDropDownMenu } = useContext(DomManipulationContext)
+  const [sortBySelected, setSortBySelected] = useState('Most Recent')
+  const { feedback, setSortOptions } = useFeedback()
+  const { showDropDownMenu, setShowDropDownMenu } = useDOM()
 
   const handleSortBySelection = (e) => {
     e.preventDefault()
@@ -19,11 +20,12 @@ export default function FeedbackSectionHeader () {
     e.preventDefault()
     setShowDropDownMenu(!showDropDownMenu)
   }
+
   return (
     <div className="container header-feedback-section">
     <h3>
       <span className="material-icons">emoji_objects</span>
-      {!feedback ? 0 : feedback.data.length }&nbsp;Suggestions
+      {!feedback?.data ? 0 : feedback.data.length }&nbsp;Suggestions
     </h3>
     <div className="sortby">
       <span>Sort by: &nbsp;</span>
@@ -33,6 +35,7 @@ export default function FeedbackSectionHeader () {
       <ul className="dropdown-list" style={showDropDownMenu ? { display: 'flex' } : { display: 'none' }}>
         <li data-val="upvotes" onClick={handleSortBySelection}>Most Upvotes</li>
         <li data-val="" onClick={handleSortBySelection}>Most Recent</li>
+        <li data-val="comments" onClick={handleSortBySelection}>Most Comments</li>
       </ul>
     </div>
     <Link to="/feedback/new" className="add-feedback">+&nbsp;Add&nbsp;Feedback</Link>

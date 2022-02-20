@@ -1,15 +1,16 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Container from './Container'
-import { DomManipulationContext } from '../context/DomManipulationContext'
-import { FeedbackContext } from '../context/FeedbackContext'
+import { useFeedback } from '../context/FeedbackProvider'
 import { Link } from 'react-router-dom'
+import { useDOM } from '../context/DomProvider'
+import RoadmapSectionError from './RoadmapSectionError'
 
-export default function Roadmap () {
-  const { showMenu } = useContext(DomManipulationContext)
-  const { feedback, error } = useContext(FeedbackContext)
+export default function RoadmapSection () {
+  const { showMenu } = useDOM()
+  const { feedback, error } = useFeedback()
   const statuses = ['Planned', 'In-Progress', 'Live']
 
-  if (error) return <div>There was an error</div>
+  if (error) return <RoadmapSectionError />
   if (!feedback) {
     return (
     <Container
@@ -32,7 +33,7 @@ export default function Roadmap () {
                 </span>
                 <span>{status}</span>
               </div>
-              <span>...</span>
+              <span>loading...</span>
             </li>
           )
         })}
@@ -50,7 +51,7 @@ export default function Roadmap () {
         <Link to="/roadmap">View</Link>
       </div>
       <ul>
-        {statuses.map((status) => {
+        {feedback?.data && statuses.map((status) => {
           const stats = feedback.data.reduce((acc, entry) => {
             acc[entry.status] = 1 + acc[entry.status] || 1
             return acc

@@ -1,64 +1,81 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import Container from '../Components/Container'
-import { FeedbackContext } from '../context/FeedbackContext'
-import useAuth from '../hooks/useAuth'
-import { deleteFeedback, getFeedback } from '../services/feedback'
-import { getToken } from '../services/session'
-import { capitalize } from '../utils'
-
-function Comment ({ user, text }) {
-  return (
-      <div className="comment-wrapper">
-        <div className="comment-header">
-          <div className="comment-user">
-            <div className="user-image">
-              <img src={user.thumbnail} />
-            </div>
-            <div className="comment-username">
-              <h3>{capitalize(`${user.name} ${user.lastname}`)}</h3>
-              <p>@{user.username}</p>
-            </div>
-          </div>
-          <a className="reply-btn" href="#">
-            Reply
-          </a>
-        </div>
-        <p className="comment-text">{text}</p>
-      </div>
-  )
-}
+import { useAuth } from '../context/AuthProvider'
+import { deleteFeedback } from '../services/feedback'
+import AddComment from '../Components/AddComment'
+import CommentList from '../Components/CommentList'
+import Feedback from '../Components/Feedback'
+import LoginToLeaveComments from '../Components/LoginToLeaveComments'
+import LoadingFeedbackPlaceholder from '../Components/LoadingFeedbackPlaceholder'
+import GenericError from '../Components/GenericError'
+import { useFeedback } from '../context/FeedbackProvider'
+import { config } from '../config'
+import io from 'socket.io-client'
 
 export default function FeedbackDetail () {
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
-  const [commentText, setCommentText] = useState('')
   const [comments, setComments] = useState([])
-  const [leftCharacters, setLeftCharacters] = useState(250)
+  const [commentCount, setCommentCount] = useState(0)
   const [error, setError] = useState(false)
-  const [feedbackPost, setFeedbackPost] = useState(null)
-  const { loggedInUser } = useAuth()
-  const { mutate } = useContext(FeedbackContext)
+  const [feedback, setFeedback] = useState(null)
+  const [socket, setSocket] = useState(null)
+  const { loggedInUser, token } = useAuth()
+  const { mutate } = useFeedback()
   const { id } = useParams()
   const navigate = useNavigate()
-  const token = getToken()
 
   useEffect(() => {
-    const setFeedback = async () => {
-      try {
-        const { data, user } = await getFeedback(id, token)
-        setFeedbackPost(data)
-        setIsAdmin(user.admin)
-        setLoading(false)
-      } catch (error) {
-        setError(true)
-        setLoading(false)
-      }
+    if (token) {
+      const socket = io(config.API_URL, { auth: { token } })
+      setSocket(socket)
+    } else {
+      const socket = io(config.API_URL)
+      setSocket(socket)
     }
-    setFeedback()
   }, [])
 
-  const handleUpvotes = () => () => {}
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect', () => {
+        console.log('socket connected')
+      })
+      socket.on('disconnect', () => {
+        setSocket(null)
+        console.log('socket disconnected')
+        setError(true)
+        setLoading(false)
+      })
+
+      socket.on('receive-feedback', ({ feedback, user }) => {
+        setComments(feedback.comments)
+        setCommentCount(feedback.comments.length)
+        setFeedback(feedback)
+        setIsAdmin(user.admin)
+        setLoading(false)
+      })
+
+      socket.on('update-comments', ({ comments }) => {
+        setComments(comments)
+      })
+
+      socket.on('receive-comment', ({ comments }) => {
+        setComments(comments)
+      })
+
+      socket.on('connect_error', () => {
+        setError(true)
+        setLoading(false)
+      })
+
+      socket.emit('join-feedback-room', { feedbackId: id })
+
+      return () => {
+        socket.emit('leave-feedback-room', { feedbackId: id })
+        socket.disconnect()
+      }
+    }
+  }, [socket])
 
   const handleDelete = async (e) => {
     e.preventDefault()
@@ -71,34 +88,12 @@ export default function FeedbackDetail () {
     }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (commentText.length === 0) {
-      console.log("don't add empty comment")
-    } else {
-      const { name, lastname, username, thumbnail } = loggedInUser
-      const newComment = { name, lastname, username, thumbnail, commentText }
-      setComments(comments.concat(newComment))
-      setCommentText('')
-    }
-  }
-
-  const handleInputChange = (e) => {
-    const text = e.target.value
-    setCommentText(text)
-  }
-
-  useEffect(() => {
-    setLeftCharacters(250 - commentText.length)
-  }, [commentText.length])
-
   return (
     <div className="page-wrapper">
       <div className="page-links">
         <Link to="/">{'<'} Go back</Link>
         {loggedInUser &&
-          (loggedInUser?.username === feedbackPost?.user.username ||
-            isAdmin) && (
+          (loggedInUser?.username === feedback?.user.username || isAdmin) && (
             <div>
               <a className="delete-feedback" href="" onClick={handleDelete}>
                 <span className="material-icons">delete</span>
@@ -109,151 +104,45 @@ export default function FeedbackDetail () {
             </div>
         )}
       </div>
-      {!loading && feedbackPost
-        ? (
+      {loading && <LoadingFeedbackPlaceholder />}
+      {error && <GenericError />}
+      {!loading && feedback && (
         <div className="comments-view">
-          <div className="container single-feedback " key={feedbackPost.id}>
-            <div>
-              <button
-                className="upvotes"
-                onClick={(e) => handleUpvotes(e, feedbackPost.id)}
-              >
-                <span className="material-icons">expand_less</span>
-                <span>{feedbackPost.upvotes}</span>
-              </button>
-            </div>
-            <div className="feedback-content">
-              <h3>{feedbackPost.title}</h3> <p>{feedbackPost.description}</p>
-              <p>
-                <span className="tag">{capitalize(feedbackPost.tag)}</span>
-              </p>
-            </div>
-            <div className="comments-counter">
-              <span className="comments-icon material-icons">
-                question_answer
-              </span>
-              <span className="count">
-                {feedbackPost.comments?.length || 0}
-              </span>
-            </div>
-          </div>
-          <div className="comment-section container">
-            <h3>{feedbackPost.comments?.length || 0} Comments</h3>
-            {comments.length
-              ? (
-                  comments.map((comment, i) => {
-                    const user = {
-                      username: comment.username,
-                      name: comment.name,
-                      lastname: comment.lastname,
-                      thumbnail: comment.thumbnail
-                    }
-                    return (
-                  <div key={i} >
-                    <Comment user={user} text={comment.commentText} />
-                    {comments.length - 1 !== i && <hr /> }
-                  </div>
-                    )
-                  })
-                )
-              : (
-              <div>No comments yet. Be the first one!</div>
-                )}
-          </div>
-          {loggedInUser
+          <Feedback feedback={feedback} socket={socket} commentCount={commentCount} />
+          {!loggedInUser
             ? (
-            <div className="new-comment container">
-              <h3>Add Comment</h3>
-              <form onSubmit={handleSubmit}>
-                <textarea
-                  maxLength="250"
-                  rows="5"
-                  placeholder="Type your comment here"
-                  value={commentText}
-                  onChange={handleInputChange}
-                ></textarea>
-                <div className="new-comment-footer">
-                  <span>{leftCharacters} Characters left</span>
-                  <button className="add-feedback">Post Comment</button>
-                </div>
-              </form>
-            </div>
+            <LoginToLeaveComments />
               )
             : (
-            <Container>
-              <p>
-                Please{' '}
-                <Link
-                  style={{ textDecoration: 'underline', fontWeight: 'bold' }}
-                  to="/login"
-                >
-                  login
-                </Link>{' '}
-                to be part of the conversation
-              </p>
-            </Container>
+            <>
+              <div className="comment-section container">
+                <h3>
+                  {commentCount || 0}{' '}
+                  {commentCount > 1 ? 'Comments' : 'Comment'}
+                </h3>
+                {comments.length
+                  ? (
+                  <CommentList
+                    socket={socket}
+                    comments={comments}
+                    setComments={setComments}
+                  />
+                    )
+                  : (
+                  <div>No comments yet. Be the first one!</div>
+                    )}
+              </div>
+              <AddComment
+                socket={socket}
+                feedbackId={id}
+                comments={comments}
+                setComments={setComments}
+                setCommentCount={setCommentCount}
+              />
+            </>
               )}
         </div>
-          )
-        : error
-          ? (
-        <div>Something went wrong</div>
-            )
-          : (
-        <div className="container single-feedback">
-          <div>
-            <button className="upvotes">
-              <span
-                style={{
-                  width: '15px',
-                  height: '1rem',
-                  borderRadius: '.5em'
-                }}
-              ></span>
-            </button>
-          </div>
-          <div className="feedback-content">
-            <h3
-              style={{
-                backgroundColor: '#eee',
-                width: '200px',
-                height: '1rem',
-                borderRadius: '.5em'
-              }}
-            ></h3>{' '}
-            <p
-              style={{
-                backgroundColor: '#eee',
-                width: '250px',
-                height: '1rem',
-                borderRadius: '.5em'
-              }}
-            ></p>
-            <p>
-              <a
-                style={{
-                  width: '30px',
-                  height: '1rem',
-                  borderRadius: '.5em'
-                }}
-                href="#"
-                className="tag"
-              ></a>
-            </p>
-          </div>
-          <div className="comments-counter">
-            <span
-              style={{
-                backgroundColor: '#eee',
-                width: '30px',
-                height: '1rem',
-                borderRadius: '.5em'
-              }}
-              className="count"
-            ></span>
-          </div>
-        </div>
-            )}
+      )}
     </div>
   )
 }

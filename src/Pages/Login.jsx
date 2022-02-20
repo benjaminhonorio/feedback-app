@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Container from '../Components/Container'
-import useAuth from '../hooks/useAuth'
+import { useAuth } from '../context/AuthProvider'
 import { login } from '../services/login'
-import { setSession, setToken } from '../services/session'
+import { setSession, setTokenInSession } from '../services/session'
+
 export default function Login () {
   const [formValues, setformValues] = useState({ username: '', password: '' })
-  const { setLoggedInUser } = useAuth()
+  const { setLoggedInUser, setToken } = useAuth()
   const navigate = useNavigate()
 
   const handleInputChange = ({ target }) => {
@@ -28,7 +29,10 @@ export default function Login () {
       })
       const user = { username, name, lastname, thumbnail }
       setSession(user)
-      setToken(token)
+      setToken(() => {
+        setTokenInSession(token)
+        return token
+      })
       setLoggedInUser(user)
       navigate('/')
     } catch (error) {

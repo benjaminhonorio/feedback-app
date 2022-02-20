@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Container from '../Components/Container'
 import Main from '../Components/Main'
-import { FeedbackContext } from '../context/FeedbackContext'
 import { capitalize } from '../utils'
+import { useFeedback } from '../context/FeedbackProvider'
+import NoFeedbackYet from '../Components/NoFeedbackYet'
+import PageNotFound from '../Pages/PageNotFound'
 
 export default function Roadmap () {
   const [selected, setSelected] = useState('planned')
   const [isMobile, setIsMobile] = useState(null)
-  const { feedback } = useContext(FeedbackContext)
+  const { feedback, error } = useFeedback()
   const navigate = useNavigate()
 
   const underlineStyle = isMobile ? { borderBottom: '4px solid #9c08b9', color: '#424242' } : {}
@@ -29,13 +31,14 @@ export default function Roadmap () {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   })
+
   const handleSelection = (status) => {
     if (isMobile) {
       setSelected(status)
     }
   }
-  if (!feedback?.data.length) return <div>Loading ...</div>
-
+  if (error) return <PageNotFound />
+  if (!feedback?.data) return <div>Loading ...</div>
   return (
     <Main style={{ flexDirection: 'column' }}>
       <Container className="roadmap-page-header">
@@ -115,9 +118,9 @@ export default function Roadmap () {
                 </div>
                   ))
               )
-            : (
-            <Container>No feedback yet</Container>
-              )}
+            : <NoFeedbackYet />
+            }
+            {!feedback?.data?.filter((f) => f.status === 'planned')?.length && <NoFeedbackYet />}
         </div>
         <div style={selected !== 'in-progress' && isMobile ? { display: 'none' } : { display: 'block' }}>
           {feedback?.data.length
@@ -150,9 +153,9 @@ export default function Roadmap () {
                 </div>
                   ))
               )
-            : (
-            <Container>No feedback yet</Container>
-              )}
+            : <NoFeedbackYet />
+             }
+            {!feedback?.data?.filter((f) => f.status === 'in-progress')?.length && <NoFeedbackYet />}
         </div>
         <div style={selected !== 'live' && isMobile ? { display: 'none' } : { display: 'block' }}>
           {feedback?.data.length
@@ -188,6 +191,9 @@ export default function Roadmap () {
             : (
             <Container>No feedback yet</Container>
               )}
+             {!feedback?.data?.filter((f) => f.status === 'live')?.length &&
+            <Container>No feedback yet</Container>
+               }
         </div>
       </div>
     </Main>

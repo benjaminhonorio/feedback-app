@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { getToken } from '../services/session'
 import { createFeedback, updateFeedback } from '../services/feedback'
-import { FeedbackContext } from '../context/FeedbackContext'
+import { useFeedback } from '../context/FeedbackProvider'
+import { useAuth } from '../context/AuthProvider'
 
 const initialState = { title: '', tag: '', status: '', description: '' }
 
 export default function BaseFormFeedback (props) {
   const [formValues, setFormValues] = useState(() => initialState)
-  const { mutate } = useContext(FeedbackContext)
+  const { mutate } = useFeedback()
   const navigate = useNavigate()
-  const token = getToken()
+  const { token } = useAuth()
   const user = props.user
   useEffect(() => {
     if (props.type === 'edit') {
@@ -38,10 +38,6 @@ export default function BaseFormFeedback (props) {
     } else if (props.type === 'create') {
       try {
         const { data } = await createFeedback(formValues, token)
-        // mutate(async (submissions) => {
-        //   console.log(submissions)
-        //   return { data: [...submissions.data, data] }
-        // }, true)
         mutate(true)
         setFormValues(initialState)
         navigate(`/feedback/${data.id}`)
@@ -49,9 +45,6 @@ export default function BaseFormFeedback (props) {
         console.log(error)
       }
     }
-    // mutate(`${config.API_URL}/api/v1/feedback}`, async (response) => {
-    //   response
-    // })
   }
 
   return (

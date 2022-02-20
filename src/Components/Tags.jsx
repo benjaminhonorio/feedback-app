@@ -1,13 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Container from './Container'
-import { DomManipulationContext } from '../context/DomManipulationContext'
-import { FeedbackContext } from '../context/FeedbackContext'
-
-// import axios from 'axios'
+import { useDOM } from '../context/DomProvider'
+import { useTags } from '../context/TagsProvider'
 
 export default function Tags () {
-  const { selectedTag, setSelectedTag } = useContext(FeedbackContext)
-  const { showMenu } = useContext(DomManipulationContext)
+  const { selectedTag = 'all', setSelectedTag } = useTags()
+  const { showMenu } = useDOM()
 
   const resetStyle = { display: 'flex', maxWidth: 'initial' }
 
