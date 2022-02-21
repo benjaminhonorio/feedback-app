@@ -59,6 +59,7 @@ export default function Login () {
                 id="username"
                 placeholder=""
                 value={formValues.username}
+                data-test-id="username-login-form"
               />
             </div>
 
@@ -72,10 +73,15 @@ export default function Login () {
                 id="password"
                 placeholder=""
                 value={formValues.password}
+                data-test-id="password-login-form"
               />
             </div>
             <div className="form-buttons">
-              <button type="submit" className="add-feedback">
+              <button
+              type="submit"
+              className="add-feedback"
+              id="loginButton-login-form"
+              >
                 Login
               </button>
               <Link to="/" className="cancel-btn add-feedback">

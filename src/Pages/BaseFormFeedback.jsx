@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthProvider'
 
 const initialState = { title: '', tag: '', status: '', description: '' }
 
-export default function BaseFormFeedback (props) {
+export default function BaseFormFeedback(props) {
   const [formValues, setFormValues] = useState(() => initialState)
   const { mutate } = useFeedback()
   const navigate = useNavigate()
@@ -29,7 +29,11 @@ export default function BaseFormFeedback (props) {
     e.preventDefault()
     if (props.type === 'edit') {
       try {
-        const { data } = await updateFeedback(formValues, props.feedback.id, token)
+        const { data } = await updateFeedback(
+          formValues,
+          props.feedback.id,
+          token
+        )
         mutate(true)
         navigate(`/feedback/${data.id}`)
       } catch (error) {
@@ -50,57 +54,96 @@ export default function BaseFormFeedback (props) {
   return (
     <>
       <div className="page-wrapper">
-      <a href="#" onClick={() => navigate(-1)}>{'<'} Go back</a>
+        <a href="#" onClick={() => navigate(-1)}>
+          {'<'} Go back
+        </a>
         <div className="container">
-        <span className="material-icons plus-icon">
-            {props.topFormIcon}
-        </span>
+          <span className="material-icons plus-icon">{props.topFormIcon}</span>
           <div className="form-container">
-          <h2>{props.formTitle}</h2>
-          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="title">Feedback Title</label>
-              <p>Add a short, descriptive title</p>
-              <input type="text" name="title" id="title" placeholder="" onChange={handleInputChange}
-                  value={formValues.title}/>
-            </div>
-            <div>
-              <label htmlFor="tag">Category</label>
-              <p>Choose a category for your feedback</p>
-              <select name="tag" id="tag" placeholder="" onChange={handleInputChange}
-                  value={formValues.tag}>
-                <option value=""></option>
-                <option value="feature">Feature</option>
-                <option value="enhancement">Enhancement</option>
-                <option value="bug">Bug</option>
-                <option value="ui">UI</option>
-                <option value="ux">UX</option>
-              </select>
-            </div>
-            {user?.admin
-              ? <div>
-              <label htmlFor="status">Update Status</label>
-              <p>Change feature status</p>
-              <select name="status" id="status" placeholder="" onChange={handleInputChange}
-                  value={formValues.status}>
-                <option value=""></option>
-                <option value="planned">Planned</option>
-                <option value="in-progress">In-Progress</option>
-                <option value="live">Live</option>
-              </select>
-            </div>
-              : null}
-            <div>
-              <label>Feedback Detail</label>
-              <p>Include any specific comments on what should be improved, added, etc.</p>
-              <textarea name="description" rows="8" onChange={handleInputChange}
-                  value={formValues.description}></textarea>
-            </div>
-            <div className="form-buttons">
-                <Link to={props.type === 'create' ? '/' : `/feedback/${props.feedback.id}`} className="cancel-btn add-feedback" >Cancel</Link>
-                <button className="add-feedback">{props.formSaveButtonLabel}</button>
-            </div>
-          </form>
+            <h2>{props.formTitle}</h2>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="title">Feedback Title</label>
+                <p>Add a short, descriptive title</p>
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  placeholder=""
+                  onChange={handleInputChange}
+                  value={formValues.title}
+                  data-test-id="title-feedback-form"
+                />
+              </div>
+              <div>
+                <label htmlFor="tag">Category</label>
+                <p>Choose a category for your feedback</p>
+                <select
+                  name="tag"
+                  id="tag"
+                  placeholder=""
+                  onChange={handleInputChange}
+                  value={formValues.tag}
+                  data-test-id="tag-feedback-form"
+                >
+                  <option value=""></option>
+                  <option value="feature">Feature</option>
+                  <option value="enhancement">Enhancement</option>
+                  <option value="bug">Bug</option>
+                  <option value="ui">UI</option>
+                  <option value="ux">UX</option>
+                </select>
+              </div>
+              {user?.admin ? (
+                <div>
+                  <label htmlFor="status">Update Status</label>
+                  <p>Change feature status</p>
+                  <select
+                    name="status"
+                    id="status"
+                    placeholder=""
+                    onChange={handleInputChange}
+                    value={formValues.status}
+                    data-test-id="status-feedback-form"
+
+                  >
+                    <option value=""></option>
+                    <option value="planned">Planned</option>
+                    <option value="in-progress">In-Progress</option>
+                    <option value="live">Live</option>
+                  </select>
+                </div>
+              ) : null}
+              <div>
+                <label>Feedback Detail</label>
+                <p>
+                  Include any specific comments on what should be improved,
+                  added, etc.
+                </p>
+                <textarea
+                  name="description"
+                  rows="8"
+                  onChange={handleInputChange}
+                  value={formValues.description}
+                  data-test-id="details-feedback-form"
+                ></textarea>
+              </div>
+              <div className="form-buttons">
+                <Link
+                  to={
+                    props.type === 'create'
+                      ? '/'
+                      : `/feedback/${props.feedback.id}`
+                  }
+                  className="cancel-btn add-feedback"
+                >
+                  Cancel
+                </Link>
+                <button className="add-feedback" id="add-FeedbackButton-form">
+                  {props.formSaveButtonLabel}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

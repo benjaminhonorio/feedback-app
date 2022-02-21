@@ -38,11 +38,11 @@ export default function FeedbackDetail () {
   useEffect(() => {
     if (socket) {
       socket.on('connect', () => {
-        console.log('socket connected')
+        // console.log('socket connected')
       })
       socket.on('disconnect', () => {
         setSocket(null)
-        console.log('socket disconnected')
+        // console.log('socket disconnected')
         setError(true)
         setLoading(false)
       })
@@ -51,7 +51,7 @@ export default function FeedbackDetail () {
         setComments(feedback.comments)
         setCommentCount(feedback.comments.length)
         setFeedback(feedback)
-        setIsAdmin(user.admin)
+        setIsAdmin(user)
         setLoading(false)
       })
 

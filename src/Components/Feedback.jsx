@@ -31,7 +31,7 @@ export default function Feedback ({ feedback, socket, commentCount }) {
     <div className="feedback-content">
       <h3>{feedback.title}</h3> <p>{feedback.description}</p>
       <p>
-        <span className="tag">{capitalize(feedback.tag)}</span>
+        <span className="tag">{`${feedback.tag.length > 2 ? capitalize(feedback.tag) : feedback.tag.toUpperCase() }`}</span>
       </p>
     </div>
     <div className="comments-counter">

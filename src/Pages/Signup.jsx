@@ -55,6 +55,7 @@ export default function Signup () {
                 id="username"
                 placeholder=""
                 value={formValues.username}
+                data-test-id="username-signup-form"
               />
             </div>
             <div>
@@ -67,6 +68,7 @@ export default function Signup () {
                 id="name"
                 placeholder=""
                 value={formValues.name}
+                data-test-id="name-signup-form"
               />
             </div>
             <div>
@@ -79,6 +81,7 @@ export default function Signup () {
                 id="lastname"
                 placeholder=""
                 value={formValues.lastname}
+                data-test-id="lastname-signup-form"
               />
             </div>
             <div>
@@ -91,6 +94,7 @@ export default function Signup () {
                 id="email"
                 placeholder=""
                 value={formValues.email}
+                data-test-id="email-signup-form"
               />
             </div>
             <div>
@@ -103,6 +107,7 @@ export default function Signup () {
                 id="password"
                 placeholder=""
                 value={formValues.password}
+                data-test-id="password-signup-form"
               />
             </div>
             <div>
@@ -115,10 +120,15 @@ export default function Signup () {
                 id="passwordRetyped"
                 placeholder=""
                 value={formValues.passwordRetyped}
+                data-test-id="passwordRetyped-signup-form"
               />
             </div>
             <div className="form-buttons">
-              <button type="submit" className="add-feedback">
+              <button
+              type="submit"
+              className="add-feedback"
+              id="signupButton-signup-form"
+              >
                 Sign Up
               </button>
               <Link to="/" className="cancel-btn add-feedback">

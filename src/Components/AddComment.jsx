@@ -39,6 +39,7 @@ export default function AddComment ({ socket, comments, feedbackId, setCommentCo
           value={content}
           name="content"
           onChange={handleInputChange}
+          data-test-id="comment-form"
         ></textarea>
         <div className="new-comment-footer">
           <span>{leftCharacters} Characters left</span>

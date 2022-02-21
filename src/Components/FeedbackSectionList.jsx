@@ -59,7 +59,7 @@ export default function FeedbackSectionList () {
               <h3 onClick={() => handleFeedbackClicked(f.id)}>{f.title}</h3> <p>{f.description}</p>
               <p>
                 <span className="tag">
-                  {capitalize(f.tag)}
+                  { `${f.tag.length > 2 ? capitalize(f.tag) : f.tag.toUpperCase() }` }
                 </span>
               </p>
             </div>
