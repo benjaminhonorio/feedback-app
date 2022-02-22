@@ -769,6 +769,75 @@ hr {
   border: 0;
 }
 
+main.profile {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.user-info {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-top: 0;
+  text-align: center;
+}
+
+.user-info .container h3 + ul {
+  margin-top: 0;
+}
+
+.user-info .container ul {
+  padding: 0.5em 0;
+}
+
+.thumbnail-container {
+  position: relative;
+}
+
+.thumbnail-container .add-photo-icon {
+  position: absolute;
+  right: 1em;
+}
+
+.thumbnail {
+  height: 200px;
+  border-radius: 50%;
+}
+
+.user-info-details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 0.5em;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.user-info-details > * {
+  margin-top: 0;
+}
+
+.user-info-submissions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.user-info-submissions .container {
+  margin-top: 0;
+}
+
 @media (max-width: 768px) {
   main {
     -webkit-box-orient: vertical;
@@ -952,6 +1021,28 @@ hr {
   }
   .roadmap-feedback > * {
     width: 100%;
+  }
+  .user-info {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    margin: 1em;
+  }
+  .user-info-details {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
   }
 }
 /*# sourceMappingURL=style.css.map */

@@ -25,7 +25,7 @@ export default function AppName () {
         <p>Feedback Board</p>
         <div className="authentication">
           {loggedInUser
-            ? <p>Hi {capitalize(loggedInUser.name)}. <Link to="/" onClick={handleLogOut}> Logout</Link></p>
+            ? <p>Hi <Link to="/profile">{capitalize(loggedInUser.name)}</Link>. <Link to="/" onClick={handleLogOut}> Logout</Link></p>
             : <p><Link to="/login">Login</Link> or <Link to="/signup">Signup</Link></p>
           }
         </div>

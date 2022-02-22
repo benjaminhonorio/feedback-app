@@ -9,6 +9,7 @@ import Roadmap from './Pages/Roadmap'
 import Signup from './Pages/Signup'
 import Login from './Pages/Login'
 import PrivateRoute from './Components/PrivateRoute'
+import Profile from './Pages/Profile'
 
 export default function App () {
   return (
@@ -29,6 +30,14 @@ export default function App () {
           element={
             <PrivateRoute>
               <NewFeedback />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />
