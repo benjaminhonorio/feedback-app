@@ -74,7 +74,6 @@ export default function FeedbackSectionList () {
           )
         : (
         <div className="container single-feedback no-feedback">
-          <div>No feedback yet.</div>
           <img src="/waiting_feedbacks.png" />
         </div>
           )}

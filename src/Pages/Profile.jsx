@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Container from '../Components/Container'
 import Main from '../Components/Main'
@@ -15,7 +15,7 @@ export default function Profile() {
           <h3>Profile</h3>
         </div>
       </Container>
-      <UserInfo />
+      <UserInfo/>
     </Main>
   )
 }
