@@ -17,7 +17,7 @@ describe('Test Sign Up and Login of user' , {scrollBehavior: false}, () => {
       lastname: 'honorio',
       email: 'carlos@example.com',
       password: 'carloshonorio',
-      passwordRetyped: 'carloshonorio',
+      passwordConfirmation: 'carloshonorio',
     })
   })
   

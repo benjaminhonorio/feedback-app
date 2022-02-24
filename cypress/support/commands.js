@@ -1,7 +1,7 @@
 
 Cypress.Commands.add(
   'signup',
-  ({ username, name, lastname, email, password, passwordRetyped }) => {
+  ({ username, name, lastname, email, password, passwordConfirmation }) => {
     cy.get('[data-test-id="username-signup-form"]')
       .type(username)
       .should('have.value', username)
@@ -22,9 +22,9 @@ Cypress.Commands.add(
       .type(password)
       .should('have.value', password)
 
-    cy.get('[data-test-id="passwordRetyped-signup-form"]')
-      .type(passwordRetyped)
-      .should('have.value', passwordRetyped)
+    cy.get('[data-test-id="passwordConfirmation-signup-form"]')
+      .type(passwordConfirmation)
+      .should('have.value', passwordConfirmation)
 
     cy.get('[id="signupButton-signup-form"]').click()
   }

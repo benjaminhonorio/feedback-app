@@ -89,6 +89,7 @@ export default function Login () {
               </Link>
             </div>
           </form>
+          <div style={{textAlign: 'right'}}>Don't have an account yet? <Link to="/signup" style={{textDecoration:'underline'}}>Sign up</Link> </div>
         </div>
       </Container>
     </div>

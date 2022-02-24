@@ -6,7 +6,8 @@ import { setSession } from '../services/session'
 
 export default function Signup () {
   const [formValues, setformValues] = useState(
-    { username: '', name: '', lastname: '', email: '', password: '', passwordRetyped: '' })
+    { username: '', name: '', lastname: '', email: '', password: '', passwordConfirmation: '' })
+  const [formErrors, setFormErrors] = useState({username: '', name: '', lastname: '', email: '', password: '', passwordConfirmation: ''})
   const navigate = useNavigate()
 
   const handleInputChange = ({ target }) => {
@@ -17,12 +18,12 @@ export default function Signup () {
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (formValues.password === formValues.passwordRetyped) {
-      const { username, name, lastname, email, password } = formValues
+      const { username, name, lastname, email, password, passwordConfirmation } = formValues
       const createUser = {
-        username, name, lastname, email, password
+        username, name, lastname, email, password, passwordConfirmation
       }
       try {
+        setFormErrors({username: '', name: '', lastname: '', email: '', password: '', passwordConfirmation: ''})
         const {
           data: {
             username = ''
@@ -31,13 +32,10 @@ export default function Signup () {
         setSession({ username })
         navigate('/login')
       } catch (error) {
-        console.log(error)
+        const errorMessages = error.response.data.message
+        setFormErrors({...errorMessages})
       }
-    } else {
-      console.log('las contraseñas no coinciden')
-    }
   }
-
   return (
     <div className="page-wrapper">
       <Link to="/">{'<'} Go back</Link>
@@ -56,7 +54,9 @@ export default function Signup () {
                 placeholder=""
                 value={formValues.username}
                 data-test-id="username-signup-form"
+                className={formErrors.username && 'form-error-input'}
               />
+              {formErrors.username && <p className="form-error-message">{formErrors.username}</p>}
             </div>
             <div>
               <label htmlFor="name">Name</label>
@@ -69,7 +69,9 @@ export default function Signup () {
                 placeholder=""
                 value={formValues.name}
                 data-test-id="name-signup-form"
+                className={formErrors.name && 'form-error-input'}
               />
+              {formErrors.name && <p className="form-error-message">{formErrors.name}</p>}
             </div>
             <div>
               <label htmlFor="lastname">Lastname</label>
@@ -82,7 +84,9 @@ export default function Signup () {
                 placeholder=""
                 value={formValues.lastname}
                 data-test-id="lastname-signup-form"
+                className={formErrors.lastname && 'form-error-input'}
               />
+              {formErrors.lastname && <p className="form-error-message">{formErrors.lastname}</p>}
             </div>
             <div>
               <label htmlFor="email">Email</label>
@@ -95,7 +99,9 @@ export default function Signup () {
                 placeholder=""
                 value={formValues.email}
                 data-test-id="email-signup-form"
+                className={formErrors.email && 'form-error-input'}
               />
+              {formErrors.email && <p className="form-error-message">{formErrors.email}</p>}
             </div>
             <div>
               <label htmlFor="password">Password</label>
@@ -108,20 +114,24 @@ export default function Signup () {
                 placeholder=""
                 value={formValues.password}
                 data-test-id="password-signup-form"
-              />
+                className={formErrors.password && 'form-error-input'}
+                />
+                {formErrors.password && <p className="form-error-message">{formErrors.password}</p>}
             </div>
             <div>
-              <label htmlFor="passwordRetyped">Password</label>
+              <label htmlFor="passwordConfirmation">Confirmation Password</label>
               <input
                 onChange={handleInputChange}
                 autoComplete="off"
                 type="password"
-                name="passwordRetyped"
-                id="passwordRetyped"
+                name="passwordConfirmation"
+                id="passwordConfirmation"
                 placeholder=""
-                value={formValues.passwordRetyped}
-                data-test-id="passwordRetyped-signup-form"
-              />
+                value={formValues.passwordConfirmation}
+                data-test-id="passwordConfirmation-signup-form"
+                className={formErrors.passwordConfirmation && 'form-error-input'}
+                />
+                {formErrors.passwordConfirmation && <p className="form-error-message">{formErrors.passwordConfirmation}</p>}
             </div>
             <div className="form-buttons">
               <button
@@ -136,6 +146,7 @@ export default function Signup () {
               </Link>
             </div>
           </form>
+          <div style={{textAlign: 'right'}}>Already have an account? <Link to="/login" style={{textDecoration:'underline'}}>Login</Link> </div>
         </div>
       </Container>
     </div>

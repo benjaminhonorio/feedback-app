@@ -583,7 +583,7 @@ textarea {
 
 .form-container .form-buttons > * {
   margin-top: 0;
-  margin: 0 0.5em;
+  margin-left: 1em;
   min-width: 150px;
 }
 
@@ -864,6 +864,15 @@ main.profile {
   background-color: #424242;
 }
 
+input.form-error-input {
+  border: 1px solid red;
+  background-color: rgba(255, 0, 0, 0.05);
+}
+
+p.form-error-message {
+  color: #d81414;
+}
+
 @media (max-width: 768px) {
   main {
     -webkit-box-orient: vertical;
@@ -946,6 +955,8 @@ main.profile {
   }
   main .roadmap-page-header {
     border-radius: 0;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
   }
   main .roadmap-statuses {
     color: #aaacaf;
