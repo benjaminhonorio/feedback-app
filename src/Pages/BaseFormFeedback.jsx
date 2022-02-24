@@ -76,7 +76,7 @@ export default function BaseFormFeedback(props) {
                   data-test-id="title-feedback-form"
                   className={formErrors.title && 'form-error-input'}
                   />
-                  {formErrors.title && <p className="form-error-message">{formErrors.title}</p>}
+                  {formErrors.title && <p className="form-error-message">{formErrors.title.replace(/title/, "feedback title")}</p>}
               </div>
               <div>
                 <label htmlFor="tag">Category</label>
@@ -98,7 +98,7 @@ export default function BaseFormFeedback(props) {
                   <option value="ux">UX</option>
                 </select>
               </div>
-              {formErrors.tag && <p className="form-error-message">{formErrors.tag}</p>}
+              {formErrors.tag && <p className="form-error-message">{formErrors.tag.replace(/tag/, "category")}</p>}
               {user?.admin ? (
                 <div>
                   <label htmlFor="status">Update Status</label>
@@ -133,7 +133,7 @@ export default function BaseFormFeedback(props) {
                   data-test-id="details-feedback-form"
                   className={formErrors.description && 'form-error-input'}
                   />
-                  {formErrors.description && <p className="form-error-message">{formErrors.description}</p>}
+                  {formErrors.description && <p className="form-error-message">{formErrors.description.replace(/description/, "feedback detail")}</p>}
               </div>
               <div className="form-buttons">
                 <Link
