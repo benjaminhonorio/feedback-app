@@ -7,6 +7,8 @@ import { setSession, setTokenInSession } from '../services/session'
 
 export default function Login () {
   const [formValues, setformValues] = useState({ username: '', password: '' })
+  const [loginError, setLoginError] = useState('')
+  const [formErrors, setFormErrors] = useState({username: '', password: ''})
   const { setLoggedInUser, setToken } = useAuth()
   const navigate = useNavigate()
 
@@ -36,7 +38,11 @@ export default function Login () {
       setLoggedInUser(user)
       navigate('/')
     } catch (error) {
-      console.log(error)
+      if (typeof error.response.data.message === 'string') {
+        setLoginError(error.response.data.message)
+      } else {
+        setFormErrors({formErrors, ...error.response.data.message})
+      }
     }
   }
 
@@ -48,6 +54,7 @@ export default function Login () {
       <Container>
         <h1 className="auth-label">Login</h1>
         <div className="form-container">
+        {loginError && <p className="form-error-message">{loginError}</p>}
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="username">Username</label>
@@ -60,7 +67,9 @@ export default function Login () {
                 placeholder=""
                 value={formValues.username}
                 data-test-id="username-login-form"
+                className={(loginError || formErrors.username) && 'form-error-input'}
               />
+              {formErrors.username && <p className="form-error-message">{formErrors.username}</p>}
             </div>
 
             <div>
@@ -74,7 +83,9 @@ export default function Login () {
                 placeholder=""
                 value={formValues.password}
                 data-test-id="password-login-form"
+                className={(loginError || formErrors.password) && 'form-error-input'}
               />
+              {formErrors.password && <p className="form-error-message">{formErrors.password}</p>}
             </div>
             <div className="form-buttons">
               <button
