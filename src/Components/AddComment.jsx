@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthProvider'
 
-export default function AddComment ({ socket, comments, feedbackId, setCommentCount }) {
+export default function AddComment({
+  socket,
+  comments,
+  feedbackId,
+  setCommentCount,
+  commentError,
+  setCommentError
+}) {
   const [leftCharacters, setLeftCharacters] = useState(250)
   const [content, setContent] = useState('')
   const { loggedInUser } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (content.length === 0) {
-      console.log("don't add empty comment")
-    } else {
-      await socket.emit('new-comment', { feedbackId, user: loggedInUser, content })
-      setContent('')
-    }
+    socket.emit('new-comment', { feedbackId, user: loggedInUser, content })
+    setContent('')
   }
 
   useEffect(() => {
@@ -21,6 +24,7 @@ export default function AddComment ({ socket, comments, feedbackId, setCommentCo
   }, [comments])
 
   const handleInputChange = (e) => {
+    setCommentError('')
     const text = e.target.value
     setContent(text)
   }
@@ -40,7 +44,13 @@ export default function AddComment ({ socket, comments, feedbackId, setCommentCo
           name="content"
           onChange={handleInputChange}
           data-test-id="comment-form"
-        ></textarea>
+          className={commentError && 'form-error-input'}
+        />
+        {commentError && (
+          <p className="form-error-message">
+            {commentError.replace(/content/, 'comment')}
+          </p>
+        )}
         <div className="new-comment-footer">
           <span>{leftCharacters} Characters left</span>
           <button className="add-feedback">Post Comment</button>

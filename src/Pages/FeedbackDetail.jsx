@@ -20,6 +20,7 @@ export default function FeedbackDetail () {
   const [error, setError] = useState(false)
   const [feedback, setFeedback] = useState(null)
   const [socket, setSocket] = useState(null)
+  const [commentError, setCommentError] = useState('')
   const { loggedInUser, token } = useAuth()
   const { mutate } = useFeedback()
   const { id } = useParams()
@@ -63,6 +64,12 @@ export default function FeedbackDetail () {
         setComments(comments)
       })
 
+      socket.on('error_on_comment_creation', ({user, message}) => {
+        if (user === loggedInUser?.username) {
+          setCommentError(message.content)
+        }
+      })
+
       socket.on('connect_error', () => {
         setError(true)
         setLoading(false)
@@ -76,7 +83,6 @@ export default function FeedbackDetail () {
       }
     }
   }, [socket])
-
   const handleDelete = async (e) => {
     e.preventDefault()
     try {
@@ -87,7 +93,6 @@ export default function FeedbackDetail () {
       console.error(error)
     }
   }
-
   return (
     <div className="page-wrapper">
       <div className="page-links">
@@ -138,6 +143,8 @@ export default function FeedbackDetail () {
                 comments={comments}
                 setComments={setComments}
                 setCommentCount={setCommentCount}
+                commentError={commentError}
+                setCommentError={setCommentError}
               />
             </>
               )}
