@@ -1,107 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getTokenFromSesion } from '../services/session'
-import useSWR from 'swr'
 import GenericError from '../Components/GenericError'
 import { config } from '../config'
 import Container from './Container'
 import Thumbnail from './Thumbnail'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import AccountDetailsForm from './AccountDetailsForm'
+import AccountDetails from './AccountDetails'
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
-
-function AccountDetails({ user }) {
-  const { username, name, lastname, email } = user
-  return (
-    <ul>
-      <li>
-        <strong>Username</strong>: {username}
-      </li>
-      <li>
-        <strong>Name</strong>: {name}
-      </li>
-      <li>
-        <strong>Lastname</strong>: {lastname}
-      </li>
-      <li>
-        <strong>Email</strong>: {email}
-      </li>
-    </ul>
-  )
-}
-
-function AccountDetailsForm({ user, thumbnail, edit, setEdit }) {
-  const token = getTokenFromSesion()
-
-  const [values, setValues] = useState(() => {
-    const { username, name, lastname, email } = user
-    return { username, name, lastname, email }
-  })
-
-  const handleInputChange = ({ target }) => {
-    setValues((values) => ({ ...values, [target.name]: target.value }))
-  }
-  const handleSubmit = () => {
-    const { username, name, lastname, email } = values
-    const newUserData = { username, name, lastname, email, thumbnail }
-    axios.put(`${config.API_URL}/api/v1/users/${user.id}`, newUserData, {
-      headers: { Authorization: `Bearer ${token}` },
-    }).catch((error) => {console.error(error)})
-  }
-
-  const handleCancel = (e) => {
-    e.preventDefault()
-    setEdit(!edit)
-
-  }
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      id="account-form"
-      className="account-details-form"
-    >
-      <label>
-        <strong>Username:</strong>
-        <input
-          onChange={handleInputChange}
-          type="text"
-          name="username"
-          value={values.username}
-        />
-      </label>
-      <label>
-        <strong>Name:</strong>
-        <input
-          onChange={handleInputChange}
-          type="text"
-          name="name"
-          value={values.name}
-        />
-      </label>
-      <label>
-        <strong>Lastname:</strong>
-        <input
-          onChange={handleInputChange}
-          type="text"
-          name="lastname"
-          value={values.lastname}
-        />
-      </label>
-      <label>
-        <strong>Email:</strong>
-        <input
-          onChange={handleInputChange}
-          type="email"
-          name="email"
-          value={values.email}
-        />
-      </label>
-      <button onClick={handleCancel} className="cancel account-details-btn">Cancel</button>
-      <button type="submit" className="account-details-btn">Save&nbsp;Changes</button>
-    </form>
-  )
-}
 
 export default function UserInfo() {
   const token = getTokenFromSesion()
@@ -110,13 +17,31 @@ export default function UserInfo() {
   const handleEdit = () => {
     setEdit(!edit)
   }
-  const { data: user, error } = useSWR(
-    [
-      `${config.API_URL}/api/v1/users/profile`,
-      { headers: { Authorization: `Bearer ${token}` } },
-    ],
-    fetcher
-  )
+
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [profile, setProfile] = useState({
+    id:"", username: "", name:"", lastname:"", email: "", thumbnail: "", comments:[], submissions:[]
+  })
+
+  useEffect(() => {
+    const getProfileInfo = async () => {
+      setLoading(true)
+      try {
+        const {data: user} = await axios.get(`${config.API_URL}/api/v1/users/profile`,
+      { headers: { Authorization: `Bearer ${token}` }})
+      const { id, username, name, lastname, email, thumbnail, comments, submissions } = user.data 
+      setLoading(false)
+      setProfile({...profile, id, username, name, lastname, email, thumbnail,  comments, submissions})
+      } catch (error) {
+        setLoading(false)
+        setError(true)
+      }
+    }
+    
+    getProfileInfo()
+  }, [edit])
+
   const handlePhotoChange = ({ target }) => {
     const formData = new FormData()
     let file = target.files[0]
@@ -127,19 +52,17 @@ export default function UserInfo() {
     })
   }
 
-  //   TODO
   const photoRef = useRef()
 
   if (error) return <GenericError>failed to load</GenericError>
-  if (!user) return <div>loading...</div>
+  if (loading) return <div>loading...</div>
 
-  const { username, thumbnail, submissions, comments } = user.data
   return (
     <div className="user-info">
       <Container className="user-info-details">
         <Thumbnail
-          src={newThumbnail.length ? newThumbnail : thumbnail}
-          alt={username}
+          src={newThumbnail.length ? newThumbnail : profile.thumbnail}
+          alt={profile.username}
           edit={edit}
           uploadRef={photoRef}
         />
@@ -154,13 +77,13 @@ export default function UserInfo() {
           <h2>Account Details </h2>
           {edit ? (
             <AccountDetailsForm
-              user={user.data}
+              user={profile}
               edit={edit}
               setEdit={setEdit}
-              thumbnail={newThumbnail.length ? newThumbnail : thumbnail}
+              thumbnail={newThumbnail.length ? newThumbnail : profile.thumbnail}
             />
           ) : (
-            <AccountDetails user={user.data} />
+            <AccountDetails user={profile} />
           )}
           {!edit && (
             <button onClick={handleEdit} className="account-details-btn edit">
@@ -175,8 +98,8 @@ export default function UserInfo() {
             Latest Feedback <span className="material-icons">reviews</span>
           </h2>
           <ul>
-            {submissions.length
-              ? submissions.map((s) => {
+            {profile.submissions.length
+              ? profile.submissions.map((s) => {
                   return (
                     <li key={s.id}>
                       <Link to={`/feedback/${s.id}`}>- {s.title}</Link> (
@@ -192,8 +115,8 @@ export default function UserInfo() {
             Latest Comments <span className="material-icons">comment</span>
           </h2>
           <ul>
-            {comments.length
-              ? comments.map((c) => {
+            {profile.comments.length
+              ? profile.comments.map((c) => {
                   return (
                     <li key={c.feedback}>
                       <Link to={`/feedback/${c.feedback}`}>- {c.content}</Link>
