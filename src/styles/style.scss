@@ -646,7 +646,8 @@ main.profile {
   @extend .account-details-btn;
   background-color: $font-over-light;
 }
-
+textarea.form-error-input,
+select.form-error-input,
 input.form-error-input {
   border: 1px solid red;
   background-color: rgba(255, 0, 0, 0.05);

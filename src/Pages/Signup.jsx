@@ -32,8 +32,8 @@ export default function Signup () {
         setSession({ username })
         navigate('/login')
       } catch (error) {
-        const errorMessages = error.response.data.message
-        setFormErrors({...errorMessages})
+        // const errorMessages = error.response.data.message
+        setFormErrors(error.response.data.message)
       }
   }
   return (

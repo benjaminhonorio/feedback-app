@@ -8,6 +8,7 @@ const initialState = { title: '', tag: '', status: '', description: '' }
 
 export default function BaseFormFeedback(props) {
   const [formValues, setFormValues] = useState(() => initialState)
+  const [formErrors, setFormErrors] = useState({title: '', tag: '', status: '', description: ''})
   const { mutate } = useFeedback()
   const navigate = useNavigate()
   const { token } = useAuth()
@@ -37,7 +38,7 @@ export default function BaseFormFeedback(props) {
         mutate(true)
         navigate(`/feedback/${data.id}`)
       } catch (error) {
-        console.log(error)
+        setFormErrors(error.response.data.message)
       }
     } else if (props.type === 'create') {
       try {
@@ -46,7 +47,7 @@ export default function BaseFormFeedback(props) {
         setFormValues(initialState)
         navigate(`/feedback/${data.id}`)
       } catch (error) {
-        console.log(error)
+        setFormErrors(error.response.data.message)
       }
     }
   }
@@ -73,7 +74,9 @@ export default function BaseFormFeedback(props) {
                   onChange={handleInputChange}
                   value={formValues.title}
                   data-test-id="title-feedback-form"
-                />
+                  className={formErrors.title && 'form-error-input'}
+                  />
+                  {formErrors.title && <p className="form-error-message">{formErrors.title}</p>}
               </div>
               <div>
                 <label htmlFor="tag">Category</label>
@@ -85,6 +88,7 @@ export default function BaseFormFeedback(props) {
                   onChange={handleInputChange}
                   value={formValues.tag}
                   data-test-id="tag-feedback-form"
+                  className={formErrors.tag && 'form-error-input'}
                 >
                   <option value=""></option>
                   <option value="feature">Feature</option>
@@ -94,6 +98,7 @@ export default function BaseFormFeedback(props) {
                   <option value="ux">UX</option>
                 </select>
               </div>
+              {formErrors.tag && <p className="form-error-message">{formErrors.tag}</p>}
               {user?.admin ? (
                 <div>
                   <label htmlFor="status">Update Status</label>
@@ -126,7 +131,9 @@ export default function BaseFormFeedback(props) {
                   onChange={handleInputChange}
                   value={formValues.description}
                   data-test-id="details-feedback-form"
-                ></textarea>
+                  className={formErrors.description && 'form-error-input'}
+                  />
+                  {formErrors.description && <p className="form-error-message">{formErrors.description}</p>}
               </div>
               <div className="form-buttons">
                 <Link
