@@ -67,7 +67,7 @@ export default function FeedbackSectionList () {
               <span className="comments-icon material-icons">
                 question_answer
               </span>
-              <span className="count">{f.comments?.length || 0}</span>
+              <span className="count">{f.commentsCount || 0}</span>
             </div>
           </div>
             ))

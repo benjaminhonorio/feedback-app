@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthProvider'
+import { useFeedback } from '../context/FeedbackProvider'
 
 export default function AddComment({
   socket,
@@ -12,6 +13,8 @@ export default function AddComment({
   const [leftCharacters, setLeftCharacters] = useState(250)
   const [content, setContent] = useState('')
   const { loggedInUser } = useAuth()
+  const { mutate } = useFeedback()
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()

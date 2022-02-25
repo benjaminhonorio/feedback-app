@@ -118,7 +118,7 @@ export default function UserInfo() {
             {profile.comments.length
               ? profile.comments.map((c) => {
                   return (
-                    <li key={c.feedback}>
+                    <li key={c.id}>
                       <Link to={`/feedback/${c.feedback}`}>- {c.content}</Link>
                     </li>
                   )

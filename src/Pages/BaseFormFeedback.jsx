@@ -55,7 +55,7 @@ export default function BaseFormFeedback(props) {
   return (
     <>
       <div className="page-wrapper">
-        <a href="#" onClick={() => navigate(-1)}>
+        <a href="#" onClick={() => navigate('/')}>
           {'<'} Go back
         </a>
         <div className="container">

@@ -246,6 +246,7 @@ main .feedback .header-feedback-section .sortby span:first-child {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
+  width: 100%;
 }
 
 .single-feedback .feedback-content h3,
@@ -699,6 +700,7 @@ textarea {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  width: 100%;
 }
 
 .status > * {

@@ -14,7 +14,7 @@ import io from 'socket.io-client'
 
 export default function FeedbackDetail () {
   const [loading, setLoading] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(null)
   const [comments, setComments] = useState([])
   const [commentCount, setCommentCount] = useState(0)
   const [error, setError] = useState(false)
@@ -25,6 +25,9 @@ export default function FeedbackDetail () {
   const { mutate } = useFeedback()
   const { id } = useParams()
   const navigate = useNavigate()
+
+
+
 
   useEffect(() => {
     if (token) {
@@ -38,12 +41,8 @@ export default function FeedbackDetail () {
 
   useEffect(() => {
     if (socket) {
-      socket.on('connect', () => {
-        // console.log('socket connected')
-      })
       socket.on('disconnect', () => {
         setSocket(null)
-        // console.log('socket disconnected')
         setError(true)
         setLoading(false)
       })
@@ -52,7 +51,9 @@ export default function FeedbackDetail () {
         setComments(feedback.comments)
         setCommentCount(feedback.comments.length)
         setFeedback(feedback)
-        setIsAdmin(user)
+        if (user === loggedInUser?.username) {
+          setIsAdmin(user)
+        }
         setLoading(false)
       })
 
@@ -62,6 +63,7 @@ export default function FeedbackDetail () {
 
       socket.on('receive-comment', ({ comments }) => {
         setComments(comments)
+        mutate(true)
       })
 
       socket.on('error_on_comment_creation', ({user, message}) => {

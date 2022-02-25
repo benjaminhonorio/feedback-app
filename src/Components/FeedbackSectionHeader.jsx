@@ -35,7 +35,7 @@ export default function FeedbackSectionHeader () {
       <ul className="dropdown-list" style={showDropDownMenu ? { display: 'flex' } : { display: 'none' }}>
         <li data-val="upvotes" onClick={handleSortBySelection}>Most Upvotes</li>
         <li data-val="" onClick={handleSortBySelection}>Most Recent</li>
-        {/* <li data-val="comments" onClick={handleSortBySelection}>Most Comments</li> */}
+        <li data-val="commentsCount" onClick={handleSortBySelection}>Most Comments</li>
       </ul>
     </div>
     <Link to="/feedback/new" className="add-feedback">+&nbsp;Add&nbsp;Feedback</Link>

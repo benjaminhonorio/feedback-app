@@ -1,7 +1,10 @@
 import React from 'react'
+import { useFeedback } from '../context/FeedbackProvider'
 import Comment from './Comment'
 
 export default function CommentList ({ comments, socket }) {
+  const { mutate } = useFeedback()
+
   return comments.map((comment, i) => {
     const user = {
       username: comment.user.username,
@@ -13,6 +16,8 @@ export default function CommentList ({ comments, socket }) {
 
     const handleDeleteComment = () => {
       socket.emit('delete-comment', { commentId })
+      mutate(true)
+
     }
 
     return (

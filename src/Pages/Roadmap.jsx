@@ -43,7 +43,7 @@ export default function Roadmap () {
     <Main style={{ flexDirection: 'column' }}>
       <Container className="roadmap-page-header">
         <div>
-          <a href="#" onClick={() => navigate(-1)}>{'<'} Go back</a>
+          <a href="#" onClick={() => navigate('/')}>{'<'} Go back</a>
           <h3>Roadmap</h3>
         </div>
         <Link to="/feedback/new" className="add-feedback">
@@ -113,7 +113,7 @@ export default function Roadmap () {
                     <span className="comments-icon material-icons">
                       question_answer
                     </span>
-                    <span className="count">{f.comments?.length || 0}</span>
+                    <span className="count">{f.commentsCount || 0}</span>
                   </div>
                 </div>
                   ))
@@ -148,7 +148,7 @@ export default function Roadmap () {
                     <span className="comments-icon material-icons">
                       question_answer
                     </span>
-                    <span className="count">{f.comments?.length || 0}</span>
+                    <span className="count">{f.commentsCount || 0}</span>
                   </div>
                 </div>
                   ))
@@ -183,7 +183,7 @@ export default function Roadmap () {
                     <span className="comments-icon material-icons">
                       question_answer
                     </span>
-                    <span className="count">{f.comments?.length || 0}</span>
+                    <span className="count">{f.commentsCount || 0}</span>
                   </div>
                 </div>
                   ))

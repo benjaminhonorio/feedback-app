@@ -17,7 +17,6 @@ export function FeedbackContextProvider ({ children }) {
     fetcher
   )
   const [filteredFeedback, setFilteredFeedback] = useState([])
-  // console.log({ SWRurl: `${config.API_URL}/api/v1/feedback${sortOptions ? `?${sortOptions}` : ''}` })
 
   return (
     <FeedbackContext.Provider

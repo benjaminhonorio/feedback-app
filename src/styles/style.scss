@@ -187,6 +187,7 @@ main {
   gap: 1em;
   .feedback-content {
     flex-grow: 1;
+    width: 100%;
     h3,
     .comments-counter {
       cursor: pointer;
@@ -527,6 +528,7 @@ textarea {
 .status {
   color: $font-light;
   display: flex;
+  width: 100%;
   & > * {
     margin-top: 0;
   }
