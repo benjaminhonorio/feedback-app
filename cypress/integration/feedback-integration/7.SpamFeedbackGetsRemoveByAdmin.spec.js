@@ -20,13 +20,12 @@ describe('Test spam feedback creation and removal', { scrollBehavior: false }, (
       details: 'spam spam spam spam spam spam spam spam spam spam spam spam spam spam spam spam spam spam spam',
       tag: 'ui',
     })
-    cy.get('button.add-feedback').click()
     cy.pause()
     cy.contains('Go back').click()
   })
   
   it('Successful logout', () => {
-    cy.get(".authentication > p > a").click()
+    cy.contains("Logout").click()
     .should(() => {
       expect(sessionStorage.getItem("user")).to.be.null
       expect(sessionStorage.getItem("token")).to.be.null

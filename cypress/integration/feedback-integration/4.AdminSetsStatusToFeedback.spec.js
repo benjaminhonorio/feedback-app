@@ -1,5 +1,5 @@
 describe(
-  'Test new feedback creation by admin',
+  'Test admin set status of feedback',
   { scrollBehavior: false },
   () => {
     afterEach(() => cy.pause())

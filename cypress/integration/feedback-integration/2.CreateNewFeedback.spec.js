@@ -20,7 +20,6 @@ describe('Test new feedback creation', { scrollBehavior: false }, () => {
       details: 'Stay updated on comments and solutions other people post',
       tag: 'feature',
     })
-    cy.get('button.add-feedback').click()
     cy.pause()
     cy.contains('Go back').click()
   })
@@ -33,7 +32,6 @@ describe('Test new feedback creation', { scrollBehavior: false }, () => {
       details: 'Challenge preview images are missing when you apply a filter',
       tag: 'bug',
     })
-    cy.get('button.add-feedback').click()
     cy.pause()
     cy.contains('Go back').click()
   })
@@ -47,14 +45,13 @@ describe('Test new feedback creation', { scrollBehavior: false }, () => {
         'It would help people with light sensitivities and who prefer dark mode',
       tag: 'feature',
     })
-    cy.get('button.add-feedback').click()
     cy.scrollTo(0, 0)
     cy.pause()
     cy.contains('Go back').click()
   })
 
   it('Successful logout', () => {
-    cy.get(".authentication > p > a").click()
+    cy.contains("Logout").click()
     .should(() => {
       expect(sessionStorage.getItem("user")).to.be.null
       expect(sessionStorage.getItem("token")).to.be.null

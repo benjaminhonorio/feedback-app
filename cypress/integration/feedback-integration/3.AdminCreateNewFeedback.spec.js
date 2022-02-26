@@ -19,7 +19,6 @@ describe(
         details: 'Challenge-specific Q&A would make for easy reference',
         tag: 'feature',
       })
-      cy.get('button.add-feedback').click()
       cy.contains('Go back').click()
     })
   }

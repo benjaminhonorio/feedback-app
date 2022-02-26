@@ -30,7 +30,25 @@ describe('Test Sign Up and Login of user' , {scrollBehavior: false}, () => {
     })
     
   })
+
+  it('User goes to profile and change the profile pic', () => {
+    cy.get('[href="/profile"]').click()
+    cy.url().should('include', '/profile')
+    cy.pause()
+    cy.contains("Edit").click()
+    cy.pause()
+    cy.get('[name="lastname"]').type(' briones')
+    cy.pause()
+    cy.scrollTo('bottom')
+    cy.contains('Save Changes').click()
+    cy.pause()
+    cy.contains('Go back').click()
+
+  })
+
+
+
   it('Successful logout', () => {
-    cy.get(".authentication > p > a").click()
+    cy.contains("Logout").click()
   })
 })
