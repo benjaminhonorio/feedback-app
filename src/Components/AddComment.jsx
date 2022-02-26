@@ -41,7 +41,7 @@ export default function AddComment({
       <form onSubmit={handleSubmit}>
         <textarea
           maxLength="250"
-          rows="5"
+          rows="7"
           placeholder="Type your comment here"
           value={content}
           name="content"
