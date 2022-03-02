@@ -8,22 +8,27 @@ import { useTags } from '../context/TagsProvider'
 import GenericError from './GenericError'
 import LoadingFeedbackPlaceholder from './LoadingFeedbackPlaceholder'
 
-export default function FeedbackSectionList () {
-  const { feedback, error, filteredFeedback, mutate } = useFeedback()
+export default function FeedbackSectionList() {
+  const { feedback, error, filteredFeedback, mutate, setFilteredFeedback } =
+    useFeedback()
   const { selectedTag } = useTags()
   const navigate = useNavigate()
-
   const handleFeedbackClicked = (id) => {
     navigate(`/feedback/${id}`)
   }
 
-  const handleUpvotes = (e, id) => {
+  const handleUpvotes = async (e, id) => {
     e.stopPropagation()
-    mutate(async (response) => {
-      const updatedFeedback = await axios.put(`${config.API_URL}/api/v1/feedback/${id}/upvote`)
-      const filteredFeedback = response.data.filter(f => f.id !== id)
-      return { data: [...filteredFeedback, updatedFeedback.data.data] }
-    }, true)
+    const target = feedback.data.find((f) => f.id === id)
+    target.upvotes += 1
+    setFilteredFeedback([...feedback.data, target])
+    // mutate(
+    //   `${config.API_URL}/api/v1/feedback/${id}/upvote`,
+    //   { data: [...feedback.data, target] },
+    //   false
+    // )
+    await axios.put(`${config.API_URL}/api/v1/feedback/${id}/upvote`)
+    // mutate(`${config.API_URL}/api/v1/feedback/${id}/upvote`)
   }
 
   let feedbackSubmissions = []
