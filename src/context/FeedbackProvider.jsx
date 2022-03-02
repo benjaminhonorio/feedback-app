@@ -25,7 +25,7 @@ export function FeedbackContextProvider({ children }) {
   return (
     <FeedbackContext.Provider
       value={{
-        feedback: feedback || [],
+        feedback: feedback,
         error,
         mutate,
         filteredFeedback,
